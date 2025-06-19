@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-//const connectDB = require('./db.js');
 const mongoose = require("mongoose");
 mongoose.connect('mongodb://localhost:27017/mydb3');
 
@@ -44,7 +43,6 @@ app.get('/api/cpes', async (req, res) => {
   }
 });
 
-// ...existing code...
 app.get("/api/cpes/search", async (req, res) => {
   try {
     const CPE = connection.db.collection("CPE");
@@ -71,7 +69,6 @@ app.get("/api/cpes/search", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-// ...existing code...
 
 const PORT = 3000;
 app.listen(PORT, () => {
