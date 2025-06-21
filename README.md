@@ -1,85 +1,89 @@
+# CPE Search App
 
-# Project Setup Instructions
-
-This project involves converting data using a Jupyter Notebook, setting up MongoDB (via cloud or Docker), running a Node.js backend, and launching a frontend development server.
-
----
-
-## 1. Convert Gzipped Files to JSON
-
-Navigate to the Jupyter Notebook and run each cell to perform the conversion.
-
-**Steps:**
-```bash
-# Open the notebook
-jupyter notebook script_gziptojson.ipynb
-```
-
-In the notebook:
-- Run each cell sequentially.
-- Ensure your `.gz` files are placed correctly as expected in the notebook.
-
-Output: You will get `.json` files for further processing or uploading to MongoDB.
+A full-stack app for searching and filtering CPE data with React (frontend) and Node.js/Express (backend).  
+Handles large datasets using MongoDB and Python-based data processing.
 
 ---
 
-## 2. Set Up MongoDB Connection
+## Project Setup
 
-You can either use MongoDB Atlas or Docker to run MongoDB locally.
+### 1. Clone the Repository
 
-### Option A: MongoDB Atlas (Cloud)
-- Go to [https://cloud.mongodb.com/](https://cloud.mongodb.com/)
-- Create a free cluster.
-- Create a user and password.
-- Whitelist your IP.
-- Get the connection string, it will look like:
-```bash
-mongodb+srv://<username>:<password>@cluster0.mongodb.net/myDatabase?retryWrites=true&w=majority
+```sh
+git clone https://github.com/Aezakmi7012/bored2.0.git
+cd bored2.0
 ```
 
-### Option B: Run MongoDB Locally with Docker
-```bash
-docker run -d -p 27017:27017 --name mongo-container mongo
+### 2. Install Dependencies
+
+#### Frontend
+
+```sh
+cd frontend
+npm install
 ```
 
-MongoDB will be available at:
-```bash
-mongodb://localhost:27017
+#### Backend
+
+```sh
+cd ../backend
+npm install
 ```
 
 ---
 
-## 3. Run the Backend Server
+### 3. Set Up MongoDB (with Docker)
 
-Navigate to the backend folder and start the Node.js server.
+Because the dataset is large, use Docker for MongoDB:
 
-```bash
+```sh
+docker run -d -p 27017:27017 --name mongodb mongo
+```
+
+- This will start a local MongoDB instance on port 27017.
+
+---
+
+### 4. Prepare the Data
+
+#### a. Convert Data
+
+- Use the provided Jupyter notebooks in `backend/` to process the data:
+  - `script_gziptojson.ipynb`: Converts the `.gz` file to XML, then to JSON.
+  - `seed.ipynb`: Seeds the MongoDB database with the processed JSON.
+
+> **Note:** These scripts are in Python because Node.js cannot handle strings larger than 512MB.
+
+#### b. Update MongoDB Connection String (if needed)
+
+- Default is `mongodb://localhost:27017/dbtest` in `backend/index.js`.
+- Change if your MongoDB runs elsewhere.
+
+---
+
+### 5. Start the Servers
+
+#### Backend
+
+```sh
 cd backend
 node index.js
 ```
 
-Ensure the backend connects to MongoDB using the connection string set in your `.env` or directly in the code.
+#### Frontend
 
-Example `.env` file:
-```env
-MONGO_URI=mongodb://localhost:27017/mydb
-PORT=3001
+```sh
+cd ../frontend
+npm run dev
 ```
 
 ---
 
-## 4. Run the Frontend App
+## 📝 Notes
 
-Navigate to the frontend project folder and start the development server.
-
-```bash
-cd fe
-npm install      # Only once to install dependencies
-npm run dev
-```
-
-The frontend app will be available at:  
-📍 [http://localhost:3000](http://localhost:3000)
+- The backend runs on [http://localhost:3000](http://localhost:3000)
+- The frontend runs on [http://localhost:5173](http://localhost:5173) (default Vite port)
+- Make sure MongoDB is running and seeded before starting the backend.
 
 ---
 
