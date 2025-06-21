@@ -1,10 +1,5 @@
 # CPE Search App
 
-A full-stack app for searching and filtering CPE data with React (frontend) and Node.js/Express (backend).  
-Handles large datasets using MongoDB and Python-based data processing.
-
----
-
 ## Project Setup
 
 ### 1. Clone the Repository
