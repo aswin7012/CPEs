@@ -31,7 +31,8 @@ function App() {
 
   useEffect(() => {
     fetchData();
-  }, [page, limit]);
+    // eslint-disable-next-line
+  }, [page, limit, filters]);
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));

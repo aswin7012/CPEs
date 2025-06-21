@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require("mongoose");
-mongoose.connect('mongodb://localhost:27017/mydb3');
+mongoose.connect('mongodb://localhost:27017/dbtest');
 
 const connection = mongoose.connection;
 
@@ -47,7 +47,10 @@ app.get("/api/cpes/search", async (req, res) => {
   try {
     const CPE = connection.db.collection("CPE");
     const { cpe_title, cpe23_url, deprecation_date } = req.query;
-    console.log(res2);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     const query = {};
     if (cpe_title) {
       query.title = { $regex: cpe_title, $options: "i" };
@@ -56,14 +59,33 @@ app.get("/api/cpes/search", async (req, res) => {
       query.cpe23_url = { $regex: cpe23_url, $options: "i" };
     }
     if (deprecation_date) {
-
-      const depDate = new Date(deprecation_date);
+      const [year, month, day] = deprecation_date.split('-').map(Number);
+      const depDate = new Date(Date.UTC(year, month - 1, day));
       query.deprecation_date = { $lt: depDate };
+      console.log("Deprecation date filter applied:", depDate.toISOString());
     }
 
-    const results = await CPE.find(query).toArray();
-    console.log("Search results:", results.length, "found");
-    res.json({ count: results.length, data: results });
+    const totalCount = await CPE.countDocuments(query);
+    console.log("Total count of CPEs matching query:", totalCount);
+    const cpes = await CPE.find(query)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    const formatted = cpes.map((cpe1, index) => ({
+      id: skip + index + 1,
+      title: cpe1.title,
+      cpe23_url: cpe1.cpe23_url,
+      references: cpe1.references,
+      deprecation_date: cpe1.deprecation_date
+    }));
+
+    res.json({
+      page,
+      limit,
+      totalCount,
+      data: formatted,
+    });
   } catch (err) {
     console.error("Error searching CPEs:", err.message);
     res.status(500).json({ error: "Server error" });
