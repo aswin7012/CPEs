@@ -5,7 +5,7 @@
 ### 1. Clone the Repository
 
 ```sh
-git clone https://github.com/Aezakmi7012/bored2.0.git
+git clone https://github.com/aswin7012/CPEs.git
 cd bored2.0
 ```
 
