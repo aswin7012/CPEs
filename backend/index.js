@@ -46,7 +46,7 @@ app.get('/api/cpes', async (req, res) => {
 app.get("/api/cpes/search", async (req, res) => {
   try {
     const CPE = connection.db.collection("CPE");
-    const { cpe_title, cpe23_url, deprecation_date } = req.query;
+    const { cpe_title, cpe23_url, deprecation_date, } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
